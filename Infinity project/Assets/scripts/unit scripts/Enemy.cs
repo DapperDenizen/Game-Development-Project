@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
 	private UnitHandler handler;
 	private SphereCollider sCollider;
 	public int maxWander;
-	int minWander; 
+	int minWander;
 	//player controlled units
 	gameworld parentGameworld;
 	Grid grid;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
 	bool alerted;
 	//if a player has alerted them
 	bool goalInProgress;
-// currently got a wander destination
+	// currently got a wander destination
 	Vector3 endGoal;
 	Vector3 initPos;
 	// if true combat is a go!
@@ -62,7 +62,7 @@ public class Enemy : MonoBehaviour
 				//print ("walkable? " + potential.walkable);
 				if (potential.walkable) {
 					RaycastHit hit;
-					Vector3 direction = potential.worldPosition - (transform.position+Vector3.up);
+					Vector3 direction = potential.worldPosition - (transform.position + Vector3.up);
 					if (Physics.Raycast (transform.position + Vector3.up, direction, out hit)) {
 						//print ("successfully hit something + its at " + hit.point + "which needs to be at " + potential.worldPosition);
 						if (hit.point == potential.worldPosition) {
@@ -87,13 +87,13 @@ public class Enemy : MonoBehaviour
 		if (Physics.Raycast (transform.position + transform.up, direction.normalized, out hit))
 		if (hit.collider.gameObject.CompareTag ("Player")) {
 			//COMBAT STARTS!
-			if (!alerted){
+			if (!alerted) {
 				alerted = true;
-			target = hit.collider.gameObject;
-			parentGameworld.switchCombat (true);
-			parentGameworld.addcombatant (gameObject);
-			handler.StartCombatMode ();
-		}
+				target = hit.collider.gameObject;
+				parentGameworld.switchCombat (true);
+				parentGameworld.addcombatant (gameObject);
+				handler.StartCombatMode ();
+			}
 			//
 		} 
 
@@ -101,51 +101,49 @@ public class Enemy : MonoBehaviour
 
 	public void CombatController ()
 	{
-		if(target.GetComponent<UnitHandler>().UnabletoFight){
+		if (target.GetComponent<UnitHandler> ().UnabletoFight) {
 			//simple find new target;
-			for(int i =0; i < parentGameworld.battleLineUp.Count;i++){
+			for (int i = 0; i < parentGameworld.battleLineUp.Count; i++) {
 				if (parentGameworld.battleLineUp [i] != target && parentGameworld.battleLineUp [i].CompareTag ("Player")) {
 					target = parentGameworld.battleLineUp [i];
 					break;
 				}
-					}
+			}
 			if (target == null) {
 				print ("Enemy wins");
 			}
 		}
 		// if not 1 space away from player move to player
 		if (Vector3.Distance (transform.position, target.transform.position) > stats.range) {
-			//how do i get to 1 node away from target?
-				// figure out direction
-			Vector3 direction = new Vector3(0,0,0);
-					// X direction
-			if (transform.position.x > target.transform.position.x) {
-
-				direction.x = 1;
-			} else if (transform.position.x < target.transform.position.x){
-				direction.x = -1;
-			}
-			// Z direction
-			if (transform.position.z > target.transform.position.z) {
-
-				direction.z = 1;
-			} else if (transform.position.z < target.transform.position.z){
-				direction.z = -1;
-			}
-
-			Vector3 dest = target.transform.position + direction;
-			//Vector3 toGo = target.transform.position-tempheading;
-
-			//PROBLEM
-				//check if another unit is in this space and figure out how to get the next closest spot
-
-			//print ("destination = "+dest+ " => "+ direction);
-			handler.CombatPathGoing (dest);
-
+			CombatMove ();
 		} else {
 			//if 1 space away from player attack
-			stats.DoDamage(target);
+			stats.DoDamage (target);
 		}
+	}
+
+	private void CombatMove ()
+	{
+
+		List<Node> possibleDests = grid.GetNeighbours (grid.NodeFromWorldPoint (target.transform.position));
+		int currIndex = 0;
+		float currLongest = float.MaxValue;
+		for (int i = 0; i < possibleDests.Count; i++) {
+			if (possibleDests [i].walkable) {
+				print ("this is walkable");
+				if (Vector3.Distance (transform.position, possibleDests [i].worldPosition) < currLongest) {
+					print ("index number "+i+" chosen!");
+					currIndex = i;
+					currLongest = Vector3.Distance (transform.position, possibleDests [i].worldPosition);
+				}
+			} else {
+				print ("this is not walkable!");
+			}
+		}
+		Vector3 dest = possibleDests [currIndex].worldPosition;
+
+		handler.CombatPathGoing (dest);
+	
 	}
 
 }

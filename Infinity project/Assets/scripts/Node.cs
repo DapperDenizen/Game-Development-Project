@@ -21,7 +21,6 @@ public class Node : IHeapItem<Node> {
 	
 	}
 	public int fCost {
-
 		get{ 
 			return gCost + hCost;
 		}
@@ -43,10 +42,7 @@ public class Node : IHeapItem<Node> {
 	}
 	//stuff to make sure units dont collide when they move
 	public void Occupied(bool state){
-		if (state) {
-			walkable = false;
-		} else {
-			walkable = true;
-		}
+		//occupied is reversed, if its occupied its false, if its not its true!!!
+		walkable = state;
 	}
 }

@@ -21,14 +21,7 @@ public class UnitMovementControl : MonoBehaviour {
 		PathRequestManager.RequestPath (transform.position, target, OnPathFound);
 
 	}
-	public void CombatPathGoing(Vector3 target){
-		PathRequestManager.RequestPath (transform.position, target, OnCombatPathFound);
-	}
-
-	public void OnCombatPathFound(Vector3[] newPath, bool pathSuccessful){
-		if(pathSuccessful){print("Stub");}
-	
-	}
+		
 
 	public void OnPathFound(Vector3[] newPath, bool pathSuccessful){
 		if (pathSuccessful) {

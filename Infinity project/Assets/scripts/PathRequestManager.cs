@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+//THIS WAS MADE USING A YOUTUBE TUTORIAL BY SABASTIAN LAGUE- https://www.youtube.com/channel/UCmtyQOKKmrMVaKuRXz02jbQ - specifically the A* Pathfinding tutorial, i do not own this code, however i may have modified it.
+
 
 public class PathRequestManager : MonoBehaviour {
 	

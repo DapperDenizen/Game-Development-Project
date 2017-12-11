@@ -92,6 +92,7 @@ public class UnitHandler : MonoBehaviour {
 			StartCoroutine ("FollowPath");
 		} else {
 			print ("woopsy");
+			print (newPath);
 		}
 	}
 
@@ -122,10 +123,10 @@ public class UnitHandler : MonoBehaviour {
 			}
 			currentWaypoint.y = yOreintation;
 			Node temp = grid.NodeFromWorldPoint (transform.position);
-			temp.Occupied (false);
+			temp.Occupied (true);
 			transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed* Time.deltaTime);
 			temp = grid.NodeFromWorldPoint (transform.position);
-			temp.Occupied (true);
+			temp.Occupied (false);
 			yield return null;
 
 		}
