@@ -1,21 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 //probably could have just had a bordermin and a bordermax instead of individual ones for width and height, but im making this like it goin to have more than one map
 public class CameraControls : MonoBehaviour
 {
 	// variables
+	bool rotating = false;
 	public GameObject camera;
 	public int speed;
 	float cinemaSmooth = 10f;
+	public float cinemaRotation =10f;
 	public int scrollSpeed;
 	public int zoomMax;
 	public int zoomMin;
 	public int boardWMax;
-// board Width max & min is the size of the playing field
+	// board Width max & min is the size of the playing field
 	public int boardWMin;
 	public int boardHMax;
-// board height max & min is the size of the playing field
+	// board height max & min is the size of the playing field
 	public int boardHMin;
 	public int borderEdge;
 	bool playerTouched = false;
@@ -73,7 +76,6 @@ public class CameraControls : MonoBehaviour
 		//right boarder
 		if (Input.mousePosition.x > Screen.width - borderEdge) {
 			if (transform.position.x < boardWMax) {
-				print ("oof");
 				movement.x = +speed * Time.deltaTime;
 			}
 		}
@@ -115,13 +117,32 @@ public class CameraControls : MonoBehaviour
 		}
 		//transform.position = player.transform.position + offset;
 
+		//Xcom style camera rotation
+		if (Input.GetKeyDown (KeyCode.Q)) {
+			//move counter-clockwise
+			print("To the left");
+			if (rotating == false) {
+				rotating = true;
+				StartCoroutine ("CinematicRotate",90f);
+			}
+		}
+		if (Input.GetKey (KeyCode.E)) {
+			//move clockwise	
+			print("To the right");
+
+			if (rotating == false) {
+				rotating = true;
+				StartCoroutine ("CinematicRotate",-90f);
+			}
+		}
+
 	}
 
 	//centre the camera on a Vector3
 	public void CentreCamera (Vector3 here)
 	{
 		//transform.position = here;
-		StopCoroutine("CinematicMove");
+		StopCoroutine ("CinematicMove ");
 		StartCoroutine ("CinematicMove", here);
 	}
 
@@ -134,5 +155,36 @@ public class CameraControls : MonoBehaviour
 			}
 			yield return null;
 		}
+	}
+
+	//cinematic rotation
+	IEnumerator CinematicRotate (float amount)
+	{
+		//Vector3 targetDir = new Vector3 (transform.rotation.x, transform.rotation.y + amount, transform.rotation.z);
+		//float step = 90 * Time.deltaTime;
+		//Vector3 newDir = Vector3.RotateTowards (transform.up, targetDir, step, 0.0f);
+		//transform.rotation = Quaternion.LookRotation (newDir);
+		Quaternion newDir = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x,transform.rotation.eulerAngles.y+amount,transform.rotation.eulerAngles.z));
+		//newDir.eulerAngles.y = newDir.eulerAngles.y+90;
+
+
+		while (true) {
+			transform.rotation = Quaternion.Lerp (transform.rotation, newDir, cinemaSmooth * Time.deltaTime);
+			if (Mathf.Abs(transform.rotation.eulerAngles.y - newDir.eulerAngles.y)<1f ) {
+				transform.Rotate (0,newDir.eulerAngles.y-transform.rotation.eulerAngles.y  ,0);
+				yield return new WaitForSecondsRealtime (.2f);
+				rotating = false;
+				yield break;
+			}
+			yield return null;
+		}
+
+
+
+
+			//transform.Rotate (0, 90*Time.deltaTime, 0);
+
+
+
 	}
 }
