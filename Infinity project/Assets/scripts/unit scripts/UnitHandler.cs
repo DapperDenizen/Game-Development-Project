@@ -120,6 +120,10 @@ public class UnitHandler : MonoBehaviour {
 
 				} 
 				currentWaypoint = path [targetIndex];
+				if (grid.NodeFromWorldPoint (currentWaypoint).walkable == false) {
+					print ("i shouldnt even be here man");
+				
+				}
 			}
 			currentWaypoint.y = yOreintation;
 			Node temp = grid.NodeFromWorldPoint (transform.position);
@@ -136,4 +140,13 @@ public class UnitHandler : MonoBehaviour {
 		parentGameworld.MyTurnDone ();
 	}
 
+	void OnDrawGizmos(){
+		Gizmos.color = Color.cyan;
+		if (path != null) {
+			for (int i = 0; i < path.Length; i++) {
+				Gizmos.DrawSphere (path [i], .5f);
+		
+			}
+		}
+	}
 }

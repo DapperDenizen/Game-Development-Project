@@ -130,15 +130,12 @@ public class Enemy : MonoBehaviour
 		float currLongest = float.MaxValue;
 		for (int i = 0; i < possibleDests.Count; i++) {
 			if (possibleDests [i].walkable) {
-				print ("this is walkable");
 				if (Vector3.Distance (transform.position, possibleDests [i].worldPosition) < currLongest) {
-					print ("index number "+i+" chosen!");
+
 					currIndex = i;
 					currLongest = Vector3.Distance (transform.position, possibleDests [i].worldPosition);
 				}
-			} else {
-				print ("this is not walkable!");
-			}
+			} 
 		}
 		Vector3 dest = possibleDests [currIndex].worldPosition;
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Node : IHeapItem<Node> {
 
 	public bool walkable;
+	public bool baseWalkable;
 	public Vector3 worldPosition;
 	public int gCost;
 	public int hCost;
@@ -15,6 +16,7 @@ public class Node : IHeapItem<Node> {
 
 	public Node(bool walkable, Vector3 worldPosition, int gridX,  int gridY){
 		this.walkable = walkable;
+		this.baseWalkable = walkable;
 	    this.worldPosition = worldPosition;
 		this.gridX = gridX;
 		this.gridY = gridY;
@@ -43,6 +45,12 @@ public class Node : IHeapItem<Node> {
 	//stuff to make sure units dont collide when they move
 	public void Occupied(bool state){
 		//occupied is reversed, if its occupied its false, if its not its true!!!
-		walkable = state;
+		if (!state) {
+			walkable = state;
+
+		} else {
+			walkable = baseWalkable;
+		}
+		//walkable = state;
 	}
 }

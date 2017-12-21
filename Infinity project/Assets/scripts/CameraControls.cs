@@ -115,12 +115,10 @@ public class CameraControls : MonoBehaviour
 			}
 
 		}
-		//transform.position = player.transform.position + offset;
 
 		//Xcom style camera rotation
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			//move counter-clockwise
-			print("To the left");
 			if (rotating == false) {
 				rotating = true;
 				StartCoroutine ("CinematicRotate",90f);
@@ -128,8 +126,6 @@ public class CameraControls : MonoBehaviour
 		}
 		if (Input.GetKey (KeyCode.E)) {
 			//move clockwise	
-			print("To the right");
-
 			if (rotating == false) {
 				rotating = true;
 				StartCoroutine ("CinematicRotate",-90f);
@@ -160,14 +156,7 @@ public class CameraControls : MonoBehaviour
 	//cinematic rotation
 	IEnumerator CinematicRotate (float amount)
 	{
-		//Vector3 targetDir = new Vector3 (transform.rotation.x, transform.rotation.y + amount, transform.rotation.z);
-		//float step = 90 * Time.deltaTime;
-		//Vector3 newDir = Vector3.RotateTowards (transform.up, targetDir, step, 0.0f);
-		//transform.rotation = Quaternion.LookRotation (newDir);
 		Quaternion newDir = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x,transform.rotation.eulerAngles.y+amount,transform.rotation.eulerAngles.z));
-		//newDir.eulerAngles.y = newDir.eulerAngles.y+90;
-
-
 		while (true) {
 			transform.rotation = Quaternion.Lerp (transform.rotation, newDir, cinemaSmooth * Time.deltaTime);
 			if (Mathf.Abs(transform.rotation.eulerAngles.y - newDir.eulerAngles.y)<1f ) {
@@ -178,13 +167,5 @@ public class CameraControls : MonoBehaviour
 			}
 			yield return null;
 		}
-
-
-
-
-			//transform.Rotate (0, 90*Time.deltaTime, 0);
-
-
-
 	}
 }
